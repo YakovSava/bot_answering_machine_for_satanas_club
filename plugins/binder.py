@@ -53,14 +53,17 @@ class Binder:
             async with aiopen(join(self._path, filename), ('rb' if binary else 'r'), encoding='utf-8') as file:
                 return await file.read()
         else:
-            return self._cpp.read(join(self._path, filename))
+            return await self._cpp.read(join(self._path, filename))
 
     async def write(self, filename: str = "", all_lines: Literal[str, bytes, bytearray] = "", binary: bool = False):
         if self._c or binary:
             async with aiopen(join(self._path, filename), ('wb' if binary else 'w'), encoding='utf-8') as file:
                 return await file.write(all_lines)
         else:
-            return self._cpp.write(join(self._path, filename), all_lines)
+            return await self._cpp.write(join(self._path, filename), all_lines)
 
     async def get_config(self) -> dict:
-        
+        return loads(await self._read(self._config))
+
+    def sync_get_config(self) -> dict:
+        return self._loop.run_until_complete(self.get_config())
