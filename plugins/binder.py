@@ -6,7 +6,7 @@ from os.path import join, exists, isdir
 from typing import Literal
 from aiofiles import open as aiopen
 from plugins.cpp import Downoloader
-from plugins.annotations import NotNone, BinderError
+from plugins.annotations import NotNone
 
 
 async def _touch(filename: str = "", binary: bool = False) -> None:

@@ -1,0 +1,1 @@
+class NotNone(object): pass
