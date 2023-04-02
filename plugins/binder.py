@@ -1,7 +1,9 @@
 import asyncio
 
 from os import mkdir
+from toml import dumps, loads
 from os.path import join, exists, isdir
+from typing import Literal
 from aiofiles import open as aiopen
 from plugins.cpp import Downoloader
 from plugins.annotations import NotNone, BinderError
@@ -34,4 +36,31 @@ class Binder:
         self._config = config
         self._loop = loop
 
-    async def read(self, filename: str = "") -> str:
+        loop.run_until_complete(self._preset())
+
+    async def _preset(self) -> None:
+        if isdir(self._path):
+            mkdir(self._path)
+        if exists(self._config):
+            await _touch(self._config)
+            await self.write(
+                self._config,
+                'token = ""\ngroup_id = ""'
+            )
+
+    async def read(self, filename: str = "", binary: bool = False) -> str:
+        if self._c or binary:
+            async with aiopen(join(self._path, filename), ('rb' if binary else 'r'), encoding='utf-8') as file:
+                return await file.read()
+        else:
+            return self._cpp.read(join(self._path, filename))
+
+    async def write(self, filename: str = "", all_lines: Literal[str, bytes, bytearray] = "", binary: bool = False):
+        if self._c or binary:
+            async with aiopen(join(self._path, filename), ('wb' if binary else 'w'), encoding='utf-8') as file:
+                return await file.write(all_lines)
+        else:
+            return self._cpp.write(join(self._path, filename), all_lines)
+
+    async def get_config(self) -> dict:
+        
