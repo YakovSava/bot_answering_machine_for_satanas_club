@@ -25,14 +25,24 @@ class Database:
         )''')
         await self._connection.commit()
 
-    async def get(self) -> tuple[aiosqlite3.Row]:
+    async def get(self) -> tuple[aiosqlite.Row]:
         await self._cursor.execute('SELECT * FROM Users')
         return await self._cursor.fetchall()
 
-    async def get_by_id(self, id:int=505671804):
+    async def get_by_id(self, id: int = 505671804):
         for user in (await self.get()):
             if int(user['id']) == id:
                 return user
 
-    async def exists(self, id:int==505671804) -> bool:
+    async def exists(self, id: int == 505671804) -> bool:
         return bool(await self.get_by_id(id))
+
+    async def reg(self, id: int = 505671804, text: str = "") -> None:
+        if not (await self.exists(id)):
+            await self._cursor.execute('INSERT INTO User VALUES (?,?)', (str(id), text)
+            await self._connection.commit()
+
+    async def delete(self, id: int = 505671804) -> None:
+        if (await self.exists(id)):
+            await self._cursor.execute(f'DELETE FROM Users WHERE id = {id}')
+            await self._connection.commit()
