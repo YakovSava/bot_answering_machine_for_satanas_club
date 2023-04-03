@@ -1,10 +1,11 @@
 import asyncio
 
 from sys import platform
-from vkbottle import ABCRule
+from vkbottle import ABCRule, CtxStorage
 from vkbottle.bot import Bot, Message
 from plugins.binder import Binder
 from plugins.cpp import Downoloader
+from plugins.states import SendMessageState
 
 if 'win' in platform:
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -20,6 +21,7 @@ binder = Binder(
     loop=loop
 )
 configuration = binder.sync_get_config()
+storage = CtxStorage()
 vk = Bot(token=configuration['token'])
 
 @vk.on.private_message(Firstes())
@@ -40,6 +42,11 @@ async def firstest(message:Message):
 Сатанизм - не религия, сатанизм - философия
 Подробнее про "Сатанизм Лавея":
 https://ru.wikipedia.org/wiki/Сатанизм_Лавея''')
+    await vk.state_dispenser.set(message.from_id, SendMessageState.message)
+
+@vk.on.private_message(state=SendMessageState.message)
+async def send_message(message:Message):
+    pass
 
 if __name__ == "__main__":
     vk.run_forever()
