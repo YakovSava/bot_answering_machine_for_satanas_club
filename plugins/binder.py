@@ -24,7 +24,7 @@ class Binder:
             cpp: Downoloader = NotNone,
             path: str = "/",
             config: str = "config.conf",
-            loop: asyncio.AbstractEventLoop = loop.get_event_loop()
+            loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
     ):
         if cpp is NotNone:
             self._c = True
