@@ -39,15 +39,17 @@ void write(string filename, string all_lines) {
 
 You can also customize:
 
-- A folder for the binder with files (*binder.py*), configuration file (*config.conf*) or downoloader type (**)
+- A folder for the binder with files (*binder.py*), configuration file (*config.conf*) or downoloader type (*cpp.py*)
 
 ```python
 from plugins.binder import Binder
+from custom.plugins.cpp import CppCustomDownoloader
 
 ...
 binder = Binder(
     path='/your/path',
-    config='your_config_filename.txt'
+    config='your_config_filename.txt',
+    cpp=CppCustomDownoloader()
 )
 ```
 
