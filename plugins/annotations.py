@@ -1,1 +1,2 @@
-class NotNone(object): pass
+class NotNone(object):
+    pass

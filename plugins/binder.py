@@ -11,10 +11,11 @@ from plugins.annotations import NotNone
 
 async def _touch(filename: str = "", binary: bool = False) -> None:
     async with aiopen(
-            filename,
-            ('xb' if binary else 'xt'),
-            encoding='utf-8'
-    ) as file: pass
+        filename,
+        ('xb' if binary else 'xt'),
+        encoding='utf-8'
+    ) as file:
+        pass
 
 
 class Binder:
